@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import tero.countryservice.country.Country;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 @RestController
+@RequestMapping("/countries")
 public class CountriesController {
 
     private Countries countries;
@@ -16,18 +21,13 @@ public class CountriesController {
         this.countries = new Countries();
     }
 
-    @RequestMapping(value = "/countries", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    CountriesProvider listAll() {
-        //Countries countries = new Countries();
-        //CountriesProvider countriesProvider = new CountriesProvider();
-        //countriesProvider.subscribe(countries.getCountries());
+    @GetMapping(value = "")
+    public CountryList listAll() {
         return countries.getCountriesProvider();
     }
 
-    @RequestMapping(value = "/countries/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    Mono<Country[]> view(@PathVariable("name") String name) {
+    @RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> view(@PathVariable("name") String name) {
         return countries.getCountry(name);
     }
 }

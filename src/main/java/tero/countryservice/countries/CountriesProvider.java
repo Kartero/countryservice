@@ -1,12 +1,11 @@
 package tero.countryservice.countries;
 
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import tero.countryservice.country.Country;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CountriesProvider {
 
@@ -14,15 +13,6 @@ public class CountriesProvider {
 
     public CountriesProvider() {
         this.countries = new ArrayList<>();
-    }
-
-    public CountriesProvider(Flux<Country> countries) {
-        this.countries = new ArrayList<>();
-        countries.subscribeOn(Schedulers.parallel()).subscribe(this.countries::add);
-    }
-
-    public void subscribe(Flux<Country> countries) {
-        countries.subscribeOn(Schedulers.parallel()).subscribe(this.countries::add);
     }
 
     public List<Country> getCountries() {
@@ -35,5 +25,30 @@ public class CountriesProvider {
 
     public void addCountry(Country country) {
         this.countries.add(country);
+    }
+
+    public List<Map<String, Object>> getDataModelList() {
+        List<Map<String, Object>> countryList = new ArrayList<>();
+        for (Country country: countries) {
+            Map<String, Object> dataModel = new HashMap<>();
+            dataModel.put("name", country.getName());
+            dataModel.put("country_code", country.getCountryCode());
+
+            countryList.add(dataModel);
+        }
+
+        return countryList;
+    }
+
+    public Map<String, Object> getDataModelEntity() {
+        Country country = countries.get(0);
+        Map<String, Object> dataModel = new HashMap<>();
+        dataModel.put("name", country.getName());
+        dataModel.put("country_code", country.getCountryCode());
+        dataModel.put("capital", country.getCapital());
+        dataModel.put("population", Integer.toString(country.getPopulation()));
+        dataModel.put("flag_file_url", country.getFlagFileUrl());
+
+        return dataModel;
     }
 }

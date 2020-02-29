@@ -3,7 +3,7 @@ package tero.countryservice.country;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Country {
 
     private String name;
@@ -22,6 +22,14 @@ public class Country {
     public Country(String name, String countryCode) {
         this.name = name;
         this.countryCode = countryCode;
+    }
+
+    public Country(String name, String countryCode, String capital, int population, String flagFileUrl) {
+        this.name = name;
+        this.countryCode = countryCode;
+        this.capital = capital;
+        this.population = population;
+        this.flagFileUrl = flagFileUrl;
     }
 
     public String getName() {
@@ -66,5 +74,9 @@ public class Country {
 
     public void setFlagFileUrl(String flagFileUrl) {
         this.flagFileUrl = flagFileUrl;
+    }
+
+    public void setFlag(String flag) {
+        this.setFlagFileUrl(flag);
     }
 }
