@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Countries</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" />
+    <script src="countries.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <h1>Full country list</h1>
+            <div class="list-group" id="countrylist">
+
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div id="detail-wrapper" style="display: none;">
+                <h2>Country details</h2>
+                <h3 id="countryname"></h3>
+                <img src="" alt="Flag" width="300px" id="flag" />
+                <p>Country code: <span id="countrycode"></span></p>
+                <p>Capital: <span id="capital"></span></p>
+                <p>Population: <span id="population"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

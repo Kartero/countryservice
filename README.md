@@ -1,4 +1,4 @@
-# countryservice
+# Countryservice
 Country service REST API demo
 
 On local environment run .\mvnw spring-boot:run
@@ -9,5 +9,4 @@ localhost:8080/counties returns country list JSON
 localhost:8080/countries/{name} returns country details JSON
 
 ## HTML Routes
-localhost:8080/ returns country list HTML page
-localhost:8080/{name} returns country detail HTML page 
+localhost:8080/ returns single page application which uses REST API through native JS
