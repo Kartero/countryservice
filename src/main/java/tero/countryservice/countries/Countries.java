@@ -27,45 +27,38 @@ public class Countries {
 
     public CountryList getCountriesProvider() {
         String[] fields = {"name", "alpha2Code"};
-        WebClient client = WebClient.builder()
-                .baseUrl(getEndpoint())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-
+        String params = getFieldParams(fields);
         CountriesProvider countriesProvider = new CountriesProvider();
 
-        Disposable subscribe = client.get()
-                .uri(getFieldParams(fields))
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Country.class)
-                .subscribeOn(Schedulers.parallel())
-                .subscribe(countriesProvider::addCountry);
-
+        Disposable subscribe = requestApi(countriesProvider, params);
          waitSubscription(subscribe);
 
         return new CountryList(countriesProvider.getDataModelList());
     }
 
     public Map<String, Object> getCountry(String name) {
+        String params = getNameParam(name);
+        CountriesProvider countriesProvider = new CountriesProvider();
+
+        Disposable subscribe = requestApi(countriesProvider, params);
+        waitSubscription(subscribe);
+
+        return countriesProvider.getDataModelEntity();
+    }
+
+    private Disposable requestApi(CountriesProvider countriesProvider, String params) {
         WebClient client = WebClient.builder()
                 .baseUrl(getEndpoint())
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
 
-        CountriesProvider countriesProvider = new CountriesProvider();
-
-        Disposable subscribe = client.get()
-                .uri(getNameParam(name))
+        return client.get()
+                .uri(params)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(Country.class)
                 .subscribeOn(Schedulers.parallel())
                 .subscribe(countriesProvider::addCountry);
-
-        waitSubscription(subscribe);
-
-        return countriesProvider.getDataModelEntity();
     }
 
     private boolean waitSubscription(Disposable subscribe) {

@@ -1,9 +1,5 @@
 package tero.countryservice.country;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-
-//@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Country {
 
     private String name;

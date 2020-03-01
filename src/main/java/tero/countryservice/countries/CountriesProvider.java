@@ -1,5 +1,7 @@
 package tero.countryservice.countries;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import tero.countryservice.country.Country;
 
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class CountriesProvider {
 
     private List<Country> countries;
@@ -41,14 +44,17 @@ public class CountriesProvider {
     }
 
     public Map<String, Object> getDataModelEntity() {
-        Country country = countries.get(0);
         Map<String, Object> dataModel = new HashMap<>();
-        dataModel.put("name", country.getName());
-        dataModel.put("country_code", country.getCountryCode());
-        dataModel.put("capital", country.getCapital());
-        dataModel.put("population", Integer.toString(country.getPopulation()));
-        dataModel.put("flag_file_url", country.getFlagFileUrl());
-
+        try {
+            Country country = countries.get(0);
+            dataModel.put("name", country.getName());
+            dataModel.put("country_code", country.getCountryCode());
+            dataModel.put("capital", country.getCapital());
+            dataModel.put("population", Integer.toString(country.getPopulation()));
+            dataModel.put("flag_file_url", country.getFlagFileUrl());
+        } catch (IndexOutOfBoundsException e) {
+            // Do nothing for now
+        }
         return dataModel;
     }
 }
