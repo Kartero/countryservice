@@ -11,8 +11,8 @@ public class CountriesController {
 
     private Countries countries;
 
-    public CountriesController() {
-        this.countries = new Countries();
+    public CountriesController(Countries countries) {
+        this.countries = countries;
     }
 
     @GetMapping(value = "")

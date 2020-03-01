@@ -1,20 +1,20 @@
 package tero.countryservice.countries;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.stereotype.Component;
 import reactor.core.Disposable;
+import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 import tero.countryservice.country.Country;
 
 import java.util.Map;
 
+@Component
 public class Countries {
 
-    private static final String endpoint = "https://restcountries.eu/rest/v2/";
+    private RestCountriesApi restCountriesApi;
 
-    public String getEndpoint() {
-        return endpoint;
+    public Countries(RestCountriesApi restCountriesApi) {
+        this.restCountriesApi = restCountriesApi;
     }
 
     public String getFieldParams(String[] fields) {
@@ -30,8 +30,9 @@ public class Countries {
         String params = getFieldParams(fields);
         CountriesProvider countriesProvider = new CountriesProvider();
 
-        Disposable subscribe = requestApi(countriesProvider, params);
-         waitSubscription(subscribe);
+        Flux<Country> countries = restCountriesApi.requestApi(countriesProvider, params);
+        Disposable subscribe = subscribe(countries, countriesProvider);
+        waitSubscription(subscribe);
 
         return new CountryList(countriesProvider.getDataModelList());
     }
@@ -40,23 +41,15 @@ public class Countries {
         String params = getNameParam(name);
         CountriesProvider countriesProvider = new CountriesProvider();
 
-        Disposable subscribe = requestApi(countriesProvider, params);
+        Flux<Country> countries = restCountriesApi.requestApi(countriesProvider, params);
+        Disposable subscribe = subscribe(countries, countriesProvider);
         waitSubscription(subscribe);
 
         return countriesProvider.getDataModelEntity();
     }
 
-    private Disposable requestApi(CountriesProvider countriesProvider, String params) {
-        WebClient client = WebClient.builder()
-                .baseUrl(getEndpoint())
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-
-        return client.get()
-                .uri(params)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToFlux(Country.class)
+    private Disposable subscribe(Flux<Country> countries, CountriesProvider countriesProvider) {
+        return countries
                 .subscribeOn(Schedulers.parallel())
                 .subscribe(countriesProvider::addCountry);
     }
